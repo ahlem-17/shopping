@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-function App() {
+import './App.css';
+import { Cart } from './features/cart/Cart';
+import { CurrencyFilter } from './features/currencyFilter/CurrencyFilter';
+import { Header } from './features/header/header';
+import { Inventory } from './features/inventory/Inventory';
+import { SearchTerm } from './features/searchTerm/SearchTerm';
+
+export const App = (props) => {
+
+  const { state, dispatch } = props;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+    <Header />
+      <CurrencyFilter
+        currencyFilter={state.currencyFilter}
+        dispatch={dispatch}
+      /> 
+      <SearchTerm
+      searchTerm={state.searchTerm}
+      dispatch={dispatch}
+      />
+      <Inventory
+        // inventory={state.inventory}
+        inventory={getFilteredItems(state.inventory, 
+        state.searchTerm)}
+        currencyFilter={state.currencyFilter}
+        dispatch={dispatch}
+      />
+      <Cart 
+      cart={state.cart}
+      currencyFilter={state.currencyFilter}
+      dispatch={dispatch}
+      />
     </div>
   );
-}
+};
 
-export default App;
+
+function getFilteredItems(items, searchTerm) {
+  return items.filter(items => items.name.toLowerCase().includes(searchTerm.toLowerCase()));
+}
